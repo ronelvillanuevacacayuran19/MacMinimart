@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Transaction Records - Mac Minimart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+    <h1>Transaction Records</h1>
+
+    {% if not transactions %}
+        <p>No transactions found.</p>
+    {% else %}
+        {% set last_id = None %}
+        {% set total = 0 %}
+        {% for row in transactions %}
+            {% set transaction_id = row[0] %}
+            {% set transaction_time = row[1] %}
+            {% set product_name = row[2] %}
+            {% set product_price = row[3] %}
+            
+            {% if transaction_id != last_id %}
+                {% if last_id is not none %}
+                    <p><strong>Total: ₱{{ "%.2f"|format(total) }}</strong></p>
+                    <hr/>
+                {% endif %}
+                <div class="transaction-header">
+                    <h2>Transaction ID: {{ transaction_id }}</h2>
+                    <p>Transaction Time: {{ transaction_time }}</p>
+                </div>
+                {% set total = 0 %}
+                {% set last_id = transaction_id %}
+            {% endif %}
+            
+            <p>- {{ product_name }}: ₱{{ "%.2f"|format(product_price) }}</p>
+            {% set total = total + product_price %}
+        {% endfor %}
+        <p><strong>Total: ₱{{ "%.2f"|format(total) }}</strong></p>
+        <hr/>
+    {% endif %}
+
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>

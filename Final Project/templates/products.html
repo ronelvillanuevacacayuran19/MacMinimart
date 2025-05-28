@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Products - Mac Minimart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+    <h1>Available Products</h1>
+    {% if products %}
+    <form action="{{ url_for('buy') }}" method="post">
+        <ul>
+            {% for product in products %}
+            <li>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="product_ids" value="{{ product[0] }}" />
+                    {{ product[1] }} <small>({{ product[2] }})</small> - ₱{{ "%.2f"|format(product[3]) }}
+                </label>
+            </li>
+            {% endfor %}
+        </ul>
+        <input type="submit" value="Buy Selected Products" />
+    </form>
+    {% else %}
+    <p>No products available.</p>
+    {% endif %}
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>
